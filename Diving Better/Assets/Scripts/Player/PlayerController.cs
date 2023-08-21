@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private MovementService movementService;
+    [SerializeField] private MiningService miningService;
     [SerializeField] private PlayerControls inputActions;
 
     private void FixedUpdate()
@@ -17,5 +18,8 @@ public class PlayerController : MonoBehaviour
     {
         if (movementService.IsBrakePressed())
             movementService.Brake();
+
+        if (miningService.IsMiningButtonPressed())
+            miningService.Mine();
     }
 }

@@ -13,7 +13,7 @@ public class MovementService
     [SerializeField] private float brakingSpeed;
 
     [SerializeField] private InputActionReference brakeAction;
-    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference moveAcftion;
 
     private bool isBrakePressed;
 
