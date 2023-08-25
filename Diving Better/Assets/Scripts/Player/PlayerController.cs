@@ -21,5 +21,8 @@ public class PlayerController : MonoBehaviour
 
         if (miningService.IsMiningButtonPressed())
             miningService.Mine();
+        else
+            miningService.ActivateLaser(false);
+
     }
 }

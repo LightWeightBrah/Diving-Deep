@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -10,41 +11,54 @@ public class MiningService
 {
     [SerializeField] private InputActionReference miningAction;
     [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private Transform minerTransform;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private Tilemap destructableTilemap;
+    [SerializeField] private Transform rotator;
+    [SerializeField] private Transform movingBeamEndPoint;
 
+    [SerializeField] private float laserDistance;
     [SerializeField] private float damage;
 
     public bool IsMiningButtonPressed() => miningAction.action.IsPressed();
 
     public void Mine()
     {
+        ActivateLaser(true);
+
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-
-        Vector2 aimDireciton = mousePosition - (Vector2)minerTransform.position;
+        Vector2 aimDireciton = mousePosition - (Vector2)rotator.transform.position;
         float angle = Mathf.Atan2(aimDireciton.y, aimDireciton.x) * Mathf.Rad2Deg;
-        minerTransform.rotation = Quaternion.Euler(0, 0, angle);
+        rotator.transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        RaycastHit2D raycastHit2D = Physics2D.Raycast(minerTransform.position, minerTransform.transform.right , 100000f, layerMask);
+        RaycastHit2D hit = Physics2D.Raycast(rotator.transform.position, rotator.transform.right, laserDistance, layerMask);
         
-        if (raycastHit2D)
+        if (hit)
         {
-            DrawRay(lineRenderer.transform.position, mousePosition);
+            SetLinePosition(rotator.transform.position, hit.point);
         }
         else
         {
-            DrawRay(lineRenderer.transform.position, lineRenderer.transform.right *  100.0f);
+            movingBeamEndPoint.position = rotator.transform.position + (rotator.transform.right * laserDistance);
+            SetLinePosition(rotator.transform.position, movingBeamEndPoint.position);
         }
 
-        destructableTilemap.SetTile(destructableTilemap.WorldToCell(raycastHit2D.point), null);
+        Vector2 tilePosition = new Vector2(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y));
+        if(rotator.transform.position.x > hit.point.x)
+            tilePosition.x -= 1;
+        
+        destructableTilemap.SetTile(destructableTilemap.WorldToCell(tilePosition), null);
 
-        Debug.DrawLine(minerTransform.position, raycastHit2D.point, Color.magenta);
-        Debug.Log(raycastHit2D.collider);
+        Debug.DrawLine(rotator.transform.position, hit.point, Color.magenta);
+        Debug.DrawLine(rotator.transform.position, movingBeamEndPoint.position, Color.green);
+        Debug.Log(hit.collider);
     }
 
+    public void ActivateLaser(bool active)
+    {
+        lineRenderer.enabled = active;
+    }
 
-    private void DrawRay(Vector2 startPosition, Vector2 endPosition)
+    private void SetLinePosition(Vector2 startPosition, Vector2 endPosition)
     {
         lineRenderer.SetPosition(0, startPosition);
         lineRenderer.SetPosition(1, endPosition);
