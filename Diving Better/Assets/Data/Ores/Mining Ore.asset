@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Mining Ore
   m_EditorClassIdentifier: 
   tileBase: {fileID: 11400000, guid: 4e304a2e4e222eb41b40e8f45f4cffda, type: 2}
+  tilePrefab: {fileID: 4281059206915048995, guid: 1154ac2bd1eb80948b8793f845461387, type: 3}
   maxHealth: 500
   itemToDrop: {fileID: 11400000, guid: 7b0b15fa3d9dff5479e6b29fe535a51c, type: 2}
   amountToDrop: 10

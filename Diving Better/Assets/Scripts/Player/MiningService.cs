@@ -13,13 +13,12 @@ public class MiningService
     [SerializeField] private InputActionReference miningAction;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private LayerMask layerMask;
-    [SerializeField] private Tilemap destructableTilemap;
     [SerializeField] private Transform rotator;
     [SerializeField] private Transform movingBeamEndPoint;
-    [SerializeField] private UnityEvent<Vector2Int, float> onDamageTile;
 
     [SerializeField] private float laserDistance;
     [SerializeField] private float damage;
+    [SerializeField] private float timeBetweenDamage;
 
     public bool IsMiningButtonPressed() => this.miningAction.action.IsPressed();
 
@@ -37,7 +36,9 @@ public class MiningService
         
         if (hit)
         {
-            SetLinePosition(this.rotator.transform.position, hit.point);
+            this.SetLinePosition(this.rotator.transform.position, hit.point);
+            if(hit.collider.TryGetComponent(out MiningBlock miningBlock))
+                miningBlock.DealDamage(this.damage, this.timeBetweenDamage);
         }
         else
         {
@@ -45,19 +46,6 @@ public class MiningService
                 (this.rotator.transform.right * this.laserDistance);
             this.SetLinePosition(this.rotator.transform.position, this.movingBeamEndPoint.position);
         }
-
-        Vector2 tilePosition = new Vector2(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y));
-        if(this.rotator.transform.position.x > hit.point.x)
-            tilePosition.x -= 1;
-
-        Vector3Int cellPosition = this.destructableTilemap.WorldToCell(tilePosition);
-        TileBase tile = this.destructableTilemap.GetTile(cellPosition);
-        if (tile != null)
-            this.onDamageTile?.Invoke(new Vector2Int(cellPosition.x, cellPosition.y), damage);
-
-        //Debug.DrawLine(rotator.transform.position, hit.point, Color.magenta);
-        //Debug.DrawLine(rotator.transform.position, movingBeamEndPoint.position, Color.green);
-        //Debug.Log(hit.collider);
     }
 
     public void ActivateLaser(bool active)

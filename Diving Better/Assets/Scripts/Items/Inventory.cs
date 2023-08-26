@@ -3,17 +3,19 @@ using System.Linq;
 
 public class Inventory : MonoBehaviour
 {
+    public static Inventory instance;
     [SerializeField] private InventorySlot[] inventorySlots;
 
     private void Awake()
     {
-        InitializeSlots();
+        if(instance == null)
+            instance = this;
+        this.InitializeSlots();
     }
 
     public void AddItem(Item item, int amount)
     {
         var slot = inventorySlots.Where(t => t.Item == item).FirstOrDefault();
-        Debug.Log($"slot is: {slot}");
         slot.IncreaseItemAmount(amount);
     }
 
