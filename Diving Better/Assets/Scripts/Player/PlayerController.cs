@@ -11,18 +11,18 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        movementService.Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"))); 
+        this.movementService.Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"))); 
     }
 
     private void Update()
     {
-        if (movementService.IsBrakePressed())
-            movementService.Brake();
+        if (this.movementService.IsBrakePressed())
+            this.movementService.Brake();
 
-        if (miningService.IsMiningButtonPressed())
-            miningService.Mine();
+        if (this.miningService.IsMiningButtonPressed())
+            this.miningService.Mine();
         else
-            miningService.ActivateLaser(false);
+            this.miningService.ActivateLaser(false);
 
     }
 }
