@@ -19,31 +19,6 @@ public class DestructableTilesManager : MonoBehaviour
         this.InitializeTileData();
     }
 
-    /*public void DamageTile(Vector2Int cellPosition, float damage)
-    {
-        WorldTile worldTile = this.dataForTile[cellPosition];
-        worldTile.Health -= damage;
-        Debug.Log($"Health of tile {cellPosition} is: {dataForTile[cellPosition].Health}");
-        Vector3Int tilePosition = new Vector3Int(cellPosition.x, cellPosition.y, 0);
-        //this.tilemap.SetTileFlags(tilePosition, TileFlags.None);
-        //this.tilemap.SetColor(tilePosition, Color.red);
-        ChangeColor(tilePosition);
-        if (worldTile.Health <= 0)
-        {
-            this.tilemap.SetTile(tilePosition, null);
-            onTileDestroyed?.Invoke(worldTile.TileData.itemToDrop, worldTile.TileData.amountToDrop);
-        }
-        //this.tilemap.SetColor(tilePosition, Color.white);
-    }*/
-
-    /*async void ChangeColor(Vector3Int tilePosition)
-    {
-        this.testingTilemap.SetTileFlags(tilePosition, TileFlags.None);
-        this.testingTilemap.SetColor(tilePosition, Color.red);
-        await Task.Delay(1000);
-        this.testingTilemap.SetColor(tilePosition, Color.white);
-    }*/
-
     private void InitializeTileData()
     {
         for (int y = this.tilemap.origin.y; y < this.tilemap.origin.y + this.tilemap.size.y; y++)
@@ -61,12 +36,12 @@ public class DestructableTilesManager : MonoBehaviour
         if (tile == null)
             return;
 
-        for (int i = 0; i < tilesData.Count; i++)
+        for (int i = 0; i < this.tilesData.Count; i++)
         {
-            if (tile == tilesData[i].TileBase)
+            if (tile == this.tilesData[i].TileBase)
             {
                 Vector3 spawnPoisiton = new Vector3(x + 0.5f, y + 0.5f, 0);
-                Instantiate(tilesData[i].TilePrefab, spawnPoisiton, Quaternion.identity, miningBlocksParent);
+                Instantiate(this.tilesData[i].TilePrefab, spawnPoisiton, Quaternion.identity, this.miningBlocksParent);
                 this.tilemap.SetTile(new Vector3Int(x, y, 0), null);
             }
         }

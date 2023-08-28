@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        this.movementService.Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"))); 
+        Vector2 moveVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        this.movementService.Move(moveVector.normalized); 
     }
 
     private void Update()

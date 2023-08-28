@@ -19,25 +19,30 @@ public class MovementService
 
     public void Move(Vector2 moveVector)
     {
-        if (isBrakePressed) return;
-
-        rigidbody2D.AddForce(moveVector * moveSpeed, ForceMode2D.Force);
-
-        if(rigidbody2D.velocity.magnitude > maxSpeed)
+        if (this.isBrakePressed)
         {
-            rigidbody2D.velocity = Vector2.ClampMagnitude(rigidbody2D.velocity, maxSpeed);
+            Debug.Log("returning coz break");
+            return;
         }
+
+
+        this.rigidbody2D.AddForce(moveVector * this.moveSpeed, ForceMode2D.Force);
+
+        /*if(this.rigidbody2D.velocity.magnitude > this.maxSpeed)
+        {
+            this.rigidbody2D.velocity = Vector2.ClampMagnitude(this.rigidbody2D.velocity, this.maxSpeed);
+        }*/
     }
 
     public void Brake()
     {
-        rigidbody2D.velocity = Vector2.Lerp(rigidbody2D.velocity, Vector2.zero, brakingSpeed * Time.deltaTime);
+        this.rigidbody2D.velocity = Vector2.Lerp(this.rigidbody2D.velocity, Vector2.zero, this.brakingSpeed * Time.deltaTime);
         Debug.Log("Braking....");
     }
 
     public bool IsBrakePressed()
     {
-        isBrakePressed = brakeAction.action.IsPressed();
-        return isBrakePressed;
+        this.isBrakePressed = this.brakeAction.action.IsPressed();
+        return this.isBrakePressed;
     }
 }
